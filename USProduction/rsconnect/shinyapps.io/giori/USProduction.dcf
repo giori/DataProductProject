@@ -1,0 +1,10 @@
+name: USProduction
+title: USProduction
+account: giori
+server: shinyapps.io
+appId: 163515
+bundleId: 745648
+url: https://giori.shinyapps.io/USProduction/
+when: 1489440788.70454
+asMultiple: FALSE
+asStatic: FALSE

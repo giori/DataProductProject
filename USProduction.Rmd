@@ -1,0 +1,101 @@
+---
+title: "US Production"
+author: "Iori Guido"
+date: "13 marzo 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Exploring the US production data
+
+In this application it is possible to explore the data about the US production during years 1970-1986. We will focus about the production values about: 
+
+- Highway and streets
+- Water and sewer facilities
+- Other public buildings and structures
+
+The production values can be analyzed w.r.t the geography of US, indeed a GoogleVis map to show the data on a map, and w.r.t some economic indicators:
+
+- Private capital stock
+- Public capital
+- State unemployment rate
+
+## User interactions
+
+The user can explore the date by choosing in the side bar panel:
+
+- Production sector
+- Economic indicator
+- Year
+
+In the main panel, the user can switch between 3 tabs:
+
+- information about the data set
+- the GoogleVis chart
+- the plotly scatter-plot
+
+
+## Example of Plolty output for 1970, Water vs. Public Capital
+
+```{r cars, echo = FALSE, message=FALSE, warning=FALSE}
+    library(shiny)
+    library(plotly)
+    library(ggplot2)
+    library(googleVis)
+    library(Ecdat)
+    library(devtools)
+    library(webshot)
+
+    data(Produc)
+    Produc$year <- as.factor(Produc$year)
+    myData <- split(Produc, Produc$year)
+
+    dx <- myData[[as.character("1970")]]["pc"] 
+    dy <- myData[[as.character("1970")]]["water"] 
+    ds <- myData[[as.character("1970")]]["state"]
+    df <- data.frame(cbind(dx,dy,ds))
+    
+    #summary(df)
+    fit <- lm( df[,1] ~df[,2], data = df)
+    
+    #print(summary(fit))
+    xlab <- list(
+      title = "pc"
+    )
+    
+    ylab <- list(
+      title = "water"
+    )
+    
+    plot_ly( df, x= df[,1] , y= df[,2], text= df[,3], type="scatter", mode = "markers"  ) %>% 
+      layout(xaxis = xlab, yaxis = ylab, showlegend = FALSE) %>% 
+      add_trace(df, 
+                x = df[,1],
+                y = fitted(lm(df[,2] ~ df[,1])),
+                mode = "lines",
+                showlegend=FALSE
+      )
+
+    
+```
+
+## Tools used
+
+In this application the following components explained during the lessons have been used:
+
+- GoogleVis plot
+- Plolty for the interactive scatter plot
+- Slinder and select inputs in Shiny
+- Side bar panel and main panel
+- Tab panel to separate the map chart from the scatter plot chart and the presentation of the date set used.
+
+Check the following links: [GitHub](https://giori.shinyapps.io/USProduction/) and the [Shiny App](https://giori.shinyapps.io/USProduction/). 
+
+
+
+
+
+
